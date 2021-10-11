@@ -102,8 +102,11 @@ void PointsSearching::searchLeftRight()
 		list_of_points_and_distances.push_back(point_and_distance);
 	}
 
+	std::cout << "Distances:\n";
 	for (auto i = distances.begin(); i !=distances.end(); ++i)
 		std::cout << *i << ' ';
+	std::cout << "\n";
+
 
 	double max_distance=0;
 	for (ListOfPointAndDistances::const_iterator it = list_of_points_and_distances.begin(); it != list_of_points_and_distances.end(); ++it)
@@ -112,15 +115,15 @@ void PointsSearching::searchLeftRight()
 		max_distance = abs(it->second);
 	}
 
-	std::cout << max_distance;
 	Point max_point;
 
 	for (ListOfPointAndDistances::const_iterator it = list_of_points_and_distances.begin(); it != list_of_points_and_distances.end(); ++it)
 	{
-		if (it->second == max_distance)
+		if (abs(it->second) == max_distance)
 			max_point = it->first;
 	}
 
+	std::cout << "Point:\n";
 	std::cout << max_point.first << ' ';
 	std::cout << max_point.second;
 
