@@ -4,10 +4,8 @@
 #include <vector>
 #include <string>
 #include <iterator>
-
+#include <algorithm>
 #include <cmath>
-#include <stdint.h>
-
 #include <io.h>
 
 typedef std::pair<double, double> Point;
@@ -20,9 +18,9 @@ struct Line {
 	double x0, y0;
 	double xn, yn;
 
-	double A = y0 - yn;
-	double B = x0 - xn;
-	double C = x0 * yn - xn * y0;
+	double A;
+	double B;
+	double C;
 };
 
 class PointsSearching {
@@ -62,30 +60,28 @@ PointsSearching::PointsSearching()
 	line.x0 = 0; line.y0 = 0;
 	line.xn = tmpx; line.yn = tmpy;
 
-	line.A = line.y0 - line.yn;
+	line.A = line.yn - line.y0;
 	line.B = line.x0 - line.xn;
-	line.C = line.x0 * line.yn - line.xn * line.y0;
+	line.C = line.xn * line.y0 - line.x0 * line.yn;
 
-	while (!file.eof()) 
-	{
-		file >> tmpx >> tmpy;
-		x.push_back(tmpx);
-		y.push_back(tmpy);
-		point.first = tmpx;
-		point.second = tmpy;
+	do {
+		file >> point.first >> point.second;
+		x.push_back(point.first);
+		y.push_back(point.second);
 		points.push_back(point);
-	}
 
-	
+	} while (!file.eof());
 }
 
 inline void PointsSearching::getVectors()
 {
-	for (uint8_t i = 0; i < x.size(); i++) {
+	for (long int i = 0; i < x.size(); i++) {
 		std::cout << x.at(i) << ' ';
 	}
 
-	for (uint8_t i = 0; i < y.size(); i++) {
+	std::cout << '\n';
+
+	for (long int i = 0; i < y.size(); i++) {
 		std::cout << y.at(i) << ' ';
 	}
 }
@@ -94,38 +90,33 @@ void PointsSearching::searchLeftRight()
 {
 	distances.reserve(x.size());
 
-	for (uint8_t i = 0; i < x.size(); i++)
+	for (long int i = 0; i < x.size(); i++)
 	{
-		distances.push_back((line.A * x.at(i) + line.B * y.at(i) + line.C) / (sqrt(line.A * line.A + line.B * line.B)));
+		distances.push_back(abs(line.A * x.at(i) + line.B * y.at(i) + line.C) / (sqrt(line.A * line.A + line.B * line.B)));
 		point_and_distance.first = points.at(i);
 		point_and_distance.second = distances.at(i);
 		list_of_points_and_distances.push_back(point_and_distance);
 	}
 
-	std::cout << "Distances:\n";
-	for (auto i = distances.begin(); i !=distances.end(); ++i)
-		std::cout << *i << ' ';
-	std::cout << "\n";
+	double max_distance = 0, min_distance = 0;
 
+	max_distance = *std::max_element(distances.begin(), distances.end());
+	min_distance = *std::min_element(distances.begin(), distances.end());
 
-	double max_distance=0;
-	for (ListOfPointAndDistances::const_iterator it = list_of_points_and_distances.begin(); it != list_of_points_and_distances.end(); ++it)
-	{
-		if(max_distance < abs(it->second))
-		max_distance = abs(it->second);
-	}
-
-	Point max_point;
+	Point rightmost_point;
+	Point leftmost_point;
 
 	for (ListOfPointAndDistances::const_iterator it = list_of_points_and_distances.begin(); it != list_of_points_and_distances.end(); ++it)
 	{
-		if (abs(it->second) == max_distance)
-			max_point = it->first;
+		if ((it->second) == max_distance)
+			rightmost_point = it->first;
+
+		if ((it->second) == min_distance)
+			leftmost_point = it->first;
 	}
 
-	std::cout << "Point:\n";
-	std::cout << max_point.first << ' ';
-	std::cout << max_point.second;
+	std::cout << "Leftmost: " << leftmost_point.first << ' ' << leftmost_point.second << "\n";
+	std::cout << "Rightmost: " << rightmost_point.first << ' ' << rightmost_point.second;
 
 }
 
