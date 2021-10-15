@@ -76,13 +76,13 @@ PointsSearching::PointsSearching()
 
 inline void PointsSearching::getVectors()
 {
-	for (long int i = 0; i < x.size(); i++) {
+	for (int i = 0; i < x.size(); i++) {
 		std::cout << x.at(i) << ' ';
 	}
 
 	std::cout << '\n';
 
-	for (long int i = 0; i < y.size(); i++) {
+	for (int i = 0; i < y.size(); i++) {
 		std::cout << y.at(i) << ' ';
 	}
 }
