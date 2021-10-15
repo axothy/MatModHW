@@ -63,8 +63,6 @@ PointsSearching::PointsSearching()
 	line.B = line.x0 - line.xn;
 	line.C = line.xn * line.y0 - line.x0 * line.yn;
 
-	std::cout << line.A << " " << line.B << " " << line.C << " \n\n";
-
 	do {
 		file >> point.first >> point.second;
 		x.push_back(point.first);
