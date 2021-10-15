@@ -7,9 +7,7 @@
 #include <algorithm>
 #include <cmath>
 #include <io.h>
-#include <stdint.h>
 
-#include <chrono>
 
 typedef std::pair<double, double> Point;
 typedef std::vector<Point> ListOfPoints;
@@ -122,17 +120,9 @@ void PointsSearching::searchLeftRight()
 
 int main(void)
 {
-	auto start_time = std::chrono::steady_clock::now();
 
-	//начало кода для таймера
 	PointsSearching search;
 	search.searchLeftRight();
-	std::cout << "\n\n";
-	//конец кода для таймера
-
-	auto end_time = std::chrono::steady_clock::now();
-	auto elapsed_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time);
-	std::cout << elapsed_ns.count() << " nanosec\n";
 
 	return 0;
 }
