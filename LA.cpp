@@ -46,7 +46,7 @@ public:
 	~PointsSearching() { file.close(); }
 
 	inline void getVectors();
-	void searchLeftRight();
+	 void searchLeftRight();
 };
 
 const std::string PointsSearching::filename = "in.txt";
@@ -86,13 +86,15 @@ inline void PointsSearching::getVectors()
 	}
 }
 
-void PointsSearching::searchLeftRight()
+ void PointsSearching::searchLeftRight()
 {
 	distances.reserve(x.size());
 
+	double sqrt_denominator = sqrt(line.A * line.A + line.B * line.B); //for algorithm efficiency
+
 	for (long int i = 0; i < x.size(); i++)
 	{
-		distances.push_back(abs(line.A * x.at(i) + line.B * y.at(i) + line.C) / (sqrt(line.A * line.A + line.B * line.B)));
+		distances.push_back(abs(line.A * x.at(i) + line.B * y.at(i) + line.C) / (sqrt_denominator));
 		point_and_distance.first = points.at(i);
 		point_and_distance.second = distances.at(i);
 		list_of_points_and_distances.push_back(point_and_distance);
