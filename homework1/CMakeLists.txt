@@ -4,7 +4,7 @@
 cmake_minimum_required (VERSION 3.8)
 
 # Добавьте источник в исполняемый файл этого проекта.
-add_executable (MatMod_LAB1_test MatMod_LAB1_test.cpp)
+add_executable (homework1 MatMod_LAB1_test.cpp)
 
 # TODO: Добавьте тесты и целевые объекты, если это необходимо.
 
