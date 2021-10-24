@@ -11,11 +11,11 @@
 
 const double EarthGravity = 9.8;
 
-//Используем контейнер с ключом х и значением у
+//РСЃРїРѕР»СЊР·СѓРµРј РєРѕРЅС‚РµР№РЅРµСЂ СЃ РєР»СЋС‡РѕРј С… Рё Р·РЅР°С‡РµРЅРёРµРј Сѓ
 typedef std::map<double, double> Walls;
 typedef std::map<double, int> Interval;
 
-//Структура - компоненты скорости МТ
+//РЎС‚СЂСѓРєС‚СѓСЂР° - РєРѕРјРїРѕРЅРµРЅС‚С‹ СЃРєРѕСЂРѕСЃС‚Рё РњРў
 typedef struct Velocity {
 	double v_x;
 	double v_y;
@@ -41,7 +41,7 @@ private:
 	double h0;
 	double x0;
 
-	double ymove, wall_x, wall_y, number_of_interval; //костыли
+	double ymove, wall_x, wall_y, number_of_interval; //РєРѕСЃС‚С‹Р»Рё
 
 	inline double time(double x, double x0) { return (x - x0) / velocity.v_x; }
 	inline double xMove(double t) { return x0 + velocity.v_x * t; }
@@ -63,7 +63,7 @@ void Ball::setVelocity() {
 
 void Ball::BuildWalls() {
 	double tmpx, tmpy;
-	walls.insert(std::make_pair(-1, -1)); /*еще один костыль*/
+	walls.insert(std::make_pair(-1, -1)); /*РµС‰Рµ РѕРґРёРЅ РєРѕСЃС‚С‹Р»СЊ*/
 	int i = 0;
 	do {
 		file >> tmpx >> tmpy;
@@ -76,29 +76,29 @@ void Ball::BuildWalls() {
 
 void Ball::KudaUpal() {
 
-	//Полет вправо -> -> ->
+	//РџРѕР»РµС‚ РІРїСЂР°РІРѕ -> -> ->
 	std::map<double, double>::iterator it1;
 	for (it1 = std::next(walls.begin()); it1 != walls.end(); ++it1) {
 		number_of_interval++;
-		if (yMove(time(it1->first, x0)) < it1->second && yMove(time(it1->first, x0)) > 0) { //если y_шарика < h0
+		if (yMove(time(it1->first, x0)) < it1->second && yMove(time(it1->first, x0)) > 0) { //РµСЃР»Рё y_С€Р°СЂРёРєР° < h0
 			wall_x = it1->first; wall_y = it1->second;
-			ymove = yMove(time(it1->first, x0)); //задаем высоту столкновения
+			ymove = yMove(time(it1->first, x0)); //Р·Р°РґР°РµРј РІС‹СЃРѕС‚Сѓ СЃС‚РѕР»РєРЅРѕРІРµРЅРёСЏ
 
-			h0 = yMove(time(it1->first, x0)); //задаем новую h0 как высоту столкновения
-			x0 = it1->first; //задаем новый x0 как x_стенки
-			break; //дальше перебирать стенки нам не нужно - выходим из цикла
+			h0 = yMove(time(it1->first, x0)); //Р·Р°РґР°РµРј РЅРѕРІСѓСЋ h0 РєР°Рє РІС‹СЃРѕС‚Сѓ СЃС‚РѕР»РєРЅРѕРІРµРЅРёСЏ
+			x0 = it1->first; //Р·Р°РґР°РµРј РЅРѕРІС‹Р№ x0 РєР°Рє x_СЃС‚РµРЅРєРё
+			break; //РґР°Р»СЊС€Рµ РїРµСЂРµР±РёСЂР°С‚СЊ СЃС‚РµРЅРєРё РЅР°Рј РЅРµ РЅСѓР¶РЅРѕ - РІС‹С…РѕРґРёРј РёР· С†РёРєР»Р°
 		}
 
 		else if (yMove(time(it1->first, x0)) < 0)
 		{
-			std::cout << interval.find(it1->first)->second << std::endl; //вывод интервала
+			std::cout << interval.find(it1->first)->second << std::endl; //РІС‹РІРѕРґ РёРЅС‚РµСЂРІР°Р»Р°
 			return;
 		}
 	}
 	
-	//С помощью итератора чистим наше дерево от стенок, стоящих правее той, с которой было столкновение
-	//erase делаем так, чтобы итератор не терялся и не указывал на пустой блок памяти
-	//После чистки лишние стенки удалились справа и мы можем идти с конца дерева
+	//РЎ РїРѕРјРѕС‰СЊСЋ РёС‚РµСЂР°С‚РѕСЂР° С‡РёСЃС‚РёРј РЅР°С€Рµ РґРµСЂРµРІРѕ РѕС‚ СЃС‚РµРЅРѕРє, СЃС‚РѕСЏС‰РёС… РїСЂР°РІРµРµ С‚РѕР№, СЃ РєРѕС‚РѕСЂРѕР№ Р±С‹Р»Рѕ СЃС‚РѕР»РєРЅРѕРІРµРЅРёРµ
+	//erase РґРµР»Р°РµРј С‚Р°Рє, С‡С‚РѕР±С‹ РёС‚РµСЂР°С‚РѕСЂ РЅРµ С‚РµСЂСЏР»СЃСЏ Рё РЅРµ СѓРєР°Р·С‹РІР°Р» РЅР° РїСѓСЃС‚РѕР№ Р±Р»РѕРє РїР°РјСЏС‚Рё
+	//РџРѕСЃР»Рµ С‡РёСЃС‚РєРё Р»РёС€РЅРёРµ СЃС‚РµРЅРєРё СѓРґР°Р»РёР»РёСЃСЊ СЃРїСЂР°РІР° Рё РјС‹ РјРѕР¶РµРј РёРґС‚Рё СЃ РєРѕРЅС†Р° РґРµСЂРµРІР°
 	std::map<double, double>::iterator it2 = std::next(it1);
 	while (it2 != walls.end()) {
 		if (it2->first != NULL)
@@ -107,7 +107,7 @@ void Ball::KudaUpal() {
 			it2++;
 	}
 
-	//Полет влево <- <- <-
+	//РџРѕР»РµС‚ РІР»РµРІРѕ <- <- <-
  	if (ymove < wall_y && ymove > 0) {
 		std::map<double, double>::reverse_iterator it3;
 		for (it3 = std::next(walls.rbegin()); it3 != walls.rend(); ++it3) {
@@ -123,7 +123,7 @@ void Ball::KudaUpal() {
 				velocity.v_y = velocity.v_y - EarthGravity * time(it3->first, x0);
 
 				number_of_interval--;
-				break; //Нашли столкновение - выходим из цикла
+				break; //РќР°С€Р»Рё СЃС‚РѕР»РєРЅРѕРІРµРЅРёРµ - РІС‹С…РѕРґРёРј РёР· С†РёРєР»Р°
 			}
 
 			else if (yMove(time(it3->first, x0)) < 0)
@@ -133,7 +133,7 @@ void Ball::KudaUpal() {
 			}
 		}
 
-		//По тем тем же правилам чистим стенки левее, используя реверсивный итератор контейнера
+		//РџРѕ С‚РµРј С‚РµРј Р¶Рµ РїСЂР°РІРёР»Р°Рј С‡РёСЃС‚РёРј СЃС‚РµРЅРєРё Р»РµРІРµРµ, РёСЃРїРѕР»СЊР·СѓСЏ СЂРµРІРµСЂСЃРёРІРЅС‹Р№ РёС‚РµСЂР°С‚РѕСЂ РєРѕРЅС‚РµР№РЅРµСЂР°
 		std::map<double, double>::reverse_iterator it4 = std::next(it3);
 		while (it4 != walls.rend()) {
 			if (it4->first != NULL)
