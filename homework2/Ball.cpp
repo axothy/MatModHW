@@ -41,7 +41,7 @@ private:
 	double h0;
 	double x0;
 
-	double ymove, wall_x, wall_y, number_of_interval; //костыли
+	double ymove, wall_x, wall_y; //костыли
 
 	inline double time(double x, double x0) { return (x - x0) / velocity.v_x; }
 	inline double xMove(double t) { return x0 + velocity.v_x * t; }
@@ -50,7 +50,6 @@ private:
 
 Ball::Ball(const std::string& filename) {
 	x0 = 0;
-	number_of_interval = 0;
 	file.open(filename);
 	setVelocity();
 	BuildWalls();
@@ -79,7 +78,6 @@ void Ball::KudaUpal() {
 	//Полет вправо -> -> ->
 	std::map<double, double>::iterator it1;
 	for (it1 = std::next(walls.begin()); it1 != walls.end(); ++it1) {
-		number_of_interval++;
 		if (yMove(time(it1->first, x0)) < it1->second && yMove(time(it1->first, x0)) > 0) { //если y_шарика < h0
 			wall_x = it1->first; wall_y = it1->second;
 			ymove = yMove(time(it1->first, x0)); //задаем высоту столкновения
@@ -111,7 +109,6 @@ void Ball::KudaUpal() {
  	if (ymove < wall_y && ymove > 0) {
 		std::map<double, double>::reverse_iterator it3;
 		for (it3 = std::next(walls.rbegin()); it3 != walls.rend(); ++it3) {
-			number_of_interval--;
 			velocity.v_y = velocity.v_y - EarthGravity * time(it3->first, x0);
 			if (yMove(time(it3->first, x0)) < it3->second && yMove(time(it3->first, x0)) > 0) {
 				wall_x = it3->first; wall_y = it3->second;
@@ -122,7 +119,6 @@ void Ball::KudaUpal() {
 				velocity.v_x = -velocity.v_x;
 				velocity.v_y = velocity.v_y - EarthGravity * time(it3->first, x0);
 
-				number_of_interval--;
 				break; //Нашли столкновение - выходим из цикла
 			}
 
