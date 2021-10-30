@@ -26,9 +26,8 @@ public:
 
 	//Конструкторы мячика
 	Ball() {} 
-	Ball(double input_h0, double input_vx, double input_vy,
-		const Walls& input_walls, const Interval& input_interval) : h0(input_h0),
-		velocity({ input_vx, input_vy }), walls(input_walls), interval(input_interval) {
+	Ball(double input_h0, double input_vx, double input_vy, const Walls& input_walls) : h0(input_h0),
+		velocity({ input_vx, input_vy }), walls(input_walls) {
 		x0 = 0; walls.insert(std::make_pair(-1, -1));}
 
 	Ball(const std::string& filename);
@@ -39,6 +38,7 @@ public:
 	Walls walls;
 	Interval interval;
 	Velocity velocity;
+	int fall_interval;
 
 	void setVelocity();
 	void BuildWalls();
@@ -74,12 +74,9 @@ void Ball::setVelocity() {
 void Ball::BuildWalls() {
 	double tmpx, tmpy;
 	walls.insert(std::make_pair(-1, -1)); /*еще один костыль*/
-	int i = 0;
 	do {
 		file >> tmpx >> tmpy;
 		walls.insert(std::make_pair(tmpx, tmpy));
-		interval.insert(std::make_pair(tmpx, i));
-		i++;
 	} while (!file.eof());
 
 } 
@@ -91,6 +88,27 @@ void Ball::showWalls() {
 }
 
 void Ball::KudaUpal() {
+
+	std::map<double, double>::iterator it0 = walls.begin();
+	while (it0 != walls.end()) {
+		if (it0->first != NULL && it0->first < 0)
+			it0 = walls.erase(it0);
+		else
+			it0++;
+	}
+
+	int i = 0;
+	for (auto it = walls.begin(); it != walls.end(); ++it)
+	{
+		interval.insert(std::make_pair(it->first, i));
+		i++;
+	}
+
+	if (interval.empty()) {
+		std::cout << "0" << std::endl;
+		fall_interval = 0;
+		return;
+	}
 
 	//Полет вправо -> -> ->
 	std::map<double, double>::iterator it1;
@@ -107,6 +125,7 @@ void Ball::KudaUpal() {
 		else if (yMove(time(it1->first, x0)) < 0)
 		{
 			std::cout << interval.find(it1->first)->second << std::endl; //вывод интервала
+			fall_interval = interval.find(it1->first)->second;
 			return;
 		}
 	}
@@ -114,16 +133,18 @@ void Ball::KudaUpal() {
 	//С помощью итератора чистим наше дерево от стенок, стоящих правее той, с которой было столкновение
 	//erase делаем так, чтобы итератор не терялся и не указывал на пустой блок памяти
 	//После чистки лишние стенки удалились справа и мы можем идти с конца дерева
-	std::map<double, double>::iterator it2 = std::next(it1);
-	while (it2 != walls.end()) {
-		if (it2->first != NULL)
-			it2 = walls.erase(it2);
-		else
-			it2++;
+	if (it1 != walls.end()) {
+		std::map<double, double>::iterator it2 = std::next(it1);
+		while (it2 != walls.end()) {
+			if (it2->first != NULL)
+				it2 = walls.erase(it2);
+			else
+				it2++;
+		}
 	}
 
 	//Полет влево <- <- <-
- 	if (ymove < wall_y && ymove > 0) {
+	if (ymove < wall_y && ymove > 0) {
 		std::map<double, double>::reverse_iterator it3;
 		for (it3 = std::next(walls.rbegin()); it3 != walls.rend(); ++it3) {
 			velocity.v_y = velocity.v_y - EarthGravity * time(it3->first, x0);
@@ -142,6 +163,13 @@ void Ball::KudaUpal() {
 			else if (yMove(time(it3->first, x0)) < 0)
 			{
 				std::cout << interval.find(it1->first)->second << std::endl;
+				fall_interval = interval.find(it1->first)->second;
+				return;
+			}
+
+			else {
+				std::cout << "0" << std::endl;
+				fall_interval = 0;
 				return;
 			}
 		}
@@ -165,7 +193,9 @@ void Ball::KudaUpal() {
 }
 
 int main(int argc, char** argv) {
-	Walls test;
+
+	if (argc < 2) return 1;
+
 	Ball ball(argv[1]);
 	ball.KudaUpal();
 
