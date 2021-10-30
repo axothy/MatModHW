@@ -23,7 +23,14 @@ typedef struct Velocity {
 
 class Ball {
 public:
-	Ball() {}
+
+	//Конструкторы мячика
+	Ball() {} 
+	Ball(double input_h0, double input_vx, double input_vy,
+		const Walls& input_walls, const Interval& input_interval) : h0(input_h0),
+		velocity({ input_vx, input_vy }), walls(input_walls), interval(input_interval) {
+		x0 = 0; walls.insert(std::make_pair(-1, -1));}
+
 	Ball(const std::string& filename);
 
 	std::ifstream file;
@@ -35,6 +42,9 @@ public:
 
 	void setVelocity();
 	void BuildWalls();
+	void BuildWalls(Walls&);
+	void showWalls();
+
 	void KudaUpal();
 
 private:
@@ -60,6 +70,7 @@ void Ball::setVelocity() {
 	file >> velocity.v_x >> velocity.v_y;
 }
 
+
 void Ball::BuildWalls() {
 	double tmpx, tmpy;
 	walls.insert(std::make_pair(-1, -1)); /*еще один костыль*/
@@ -72,6 +83,12 @@ void Ball::BuildWalls() {
 	} while (!file.eof());
 
 } 
+
+void Ball::showWalls() {
+	for (auto i = walls.begin(); i != walls.end(); ++i) {
+		std::cout << i->first << " " << i->second << std::endl;
+	}
+}
 
 void Ball::KudaUpal() {
 
@@ -147,9 +164,26 @@ void Ball::KudaUpal() {
 
 }
 
-int main(void) {
-	Ball ball("in.txt");
-	ball.KudaUpal();
+int main(int argc, char** argv) {
+	//Ball ball("in.txt");
+	
+	Walls test;
+	Interval testint;
+
+	test.insert(std::make_pair(1, 1));
+	testint.insert(std::make_pair(1, 0));
+
+	test.insert(std::make_pair(2, 1));
+	testint.insert(std::make_pair(2, 1));
+
+	test.insert(std::make_pair(5, 4));
+	testint.insert(std::make_pair(5, 2));
+
+	test.insert(std::make_pair(8, 2));
+	testint.insert(std::make_pair(8, 3));
+
+	Ball ball(6.0, 5.0, 5.0, test, testint);
+	ball.KudaUpal(); 
 
 	return 0;
 }
