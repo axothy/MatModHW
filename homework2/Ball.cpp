@@ -165,25 +165,9 @@ void Ball::KudaUpal() {
 }
 
 int main(int argc, char** argv) {
-	//Ball ball("in.txt");
-	
 	Walls test;
-	Interval testint;
-
-	test.insert(std::make_pair(1, 1));
-	testint.insert(std::make_pair(1, 0));
-
-	test.insert(std::make_pair(2, 1));
-	testint.insert(std::make_pair(2, 1));
-
-	test.insert(std::make_pair(5, 4));
-	testint.insert(std::make_pair(5, 2));
-
-	test.insert(std::make_pair(8, 2));
-	testint.insert(std::make_pair(8, 3));
-
-	Ball ball(6.0, 5.0, 5.0, test, testint);
-	ball.KudaUpal(); 
+	Ball ball(argv[1]);
+	ball.KudaUpal();
 
 	return 0;
 }
