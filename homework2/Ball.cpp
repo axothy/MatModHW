@@ -26,9 +26,10 @@ public:
 
 	//Конструкторы мячика
 	Ball() {} 
-	Ball(double input_h0, double input_vx, double input_vy, const Walls& input_walls) : h0(input_h0),
-		velocity({ input_vx, input_vy }), walls(input_walls) {
-		x0 = 0; walls.insert(std::make_pair(-1, -1));}
+	Ball(double h0, double vx, double vy, const Walls& input_walls) : h0(h0),
+		velocity({ vx, vy }), walls(std::move(input_walls)), x0(0) {
+		this->walls.insert(std::make_pair(-1, -1));
+	}
 
 	Ball(const std::string& filename);
 
