@@ -80,6 +80,17 @@ TEST(OnlyOneWall, FindingInvervalForBall) {
 	EXPECT_EQ(ball.fall_interval, 0);
 }
 
+TEST(nohits_LongFlight, FindingInvervalForBall) {
+	Walls test;
+
+	test.insert(std::make_pair(10, 15));
+
+	Ball ball(6.0, 5.0, 5.0, test);
+	ball.KudaUpal();
+
+	EXPECT_EQ(ball.fall_interval, 0);
+}
+
 TEST(CheckVelocity, ReadingInputFile)
 {
 	Velocity test_vel;
