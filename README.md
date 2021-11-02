@@ -23,3 +23,7 @@ Variant #2
 
 
 Проверка правильности интервала падения сравнивалась с помощью сервиса https://www.desmos.com/calculator/0klgkalgw6
+
+
+
+![alt tag](http://images.vfl.ru/ii/1635859782/26bc4b0c/36516967.png)
