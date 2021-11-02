@@ -27,8 +27,8 @@ public:
 	//Конструкторы мячика
 	Ball() {} 
 	Ball(double h0, double vx, double vy, const Walls& input_walls) : h0(h0),
-		velocity({ vx, vy }), walls(std::move(input_walls)), x0(0) {
-		this->walls.insert(std::make_pair(-1, -1));
+		velocity({ vx, vy }), walls(std::move(input_walls)), x0(0), number_of_hits(0) {
+		this->walls.insert(std::make_pair(-1, -1)); checkWalls();
 	}
 
 	Ball(const std::string& filename);
@@ -43,7 +43,7 @@ public:
 
 	void setVelocity();
 	void BuildWalls();
-	void BuildWalls(Walls&);
+	void checkWalls();
 	void showWalls();
 
 	void KudaUpal();
@@ -53,6 +53,7 @@ private:
 	double x0;
 
 	double ymove, wall_x, wall_y; //костыли
+	int number_of_hits;
 
 	inline double time(double x, double x0) { return (x - x0) / velocity.v_x; }
 	inline double xMove(double t) { return x0 + velocity.v_x * t; }
@@ -61,6 +62,7 @@ private:
 
 Ball::Ball(const std::string& filename) {
 	x0 = 0;
+	number_of_hits = 0;
 	file.open(filename);
 	setVelocity();
 	BuildWalls();
@@ -80,16 +82,10 @@ void Ball::BuildWalls() {
 		walls.insert(std::make_pair(tmpx, tmpy));
 	} while (!file.eof());
 
+	checkWalls();
 } 
 
-void Ball::showWalls() {
-	for (auto i = walls.begin(); i != walls.end(); ++i) {
-		std::cout << i->first << " " << i->second << std::endl;
-	}
-}
-
-void Ball::KudaUpal() {
-
+void Ball::checkWalls() {
 	std::map<double, double>::iterator it0 = walls.begin();
 	while (it0 != walls.end()) {
 		if (it0->first != NULL && it0->first < 0)
@@ -104,6 +100,17 @@ void Ball::KudaUpal() {
 		interval.insert(std::make_pair(it->first, i));
 		i++;
 	}
+
+	walls.insert(std::make_pair(-1, -1));
+}
+
+void Ball::showWalls() {
+	for (auto i = walls.begin(); i != walls.end(); ++i) {
+		std::cout << i->first << " " << i->second << std::endl;
+	}
+}
+
+void Ball::KudaUpal() {
 
 	if (interval.empty()) {
 		std::cout << "0" << std::endl;
@@ -120,6 +127,8 @@ void Ball::KudaUpal() {
 
 			h0 = yMove(time(it1->first, x0)); //задаем новую h0 как высоту столкновения
 			x0 = it1->first; //задаем новый x0 как x_стенки
+
+			number_of_hits++;
 			break; //дальше перебирать стенки нам не нужно - выходим из цикла
 		}
 
@@ -129,6 +138,12 @@ void Ball::KudaUpal() {
 			fall_interval = interval.find(it1->first)->second;
 			return;
 		}
+	}
+
+	if (number_of_hits == 0) {
+		std::cout << std::prev(interval.end())->second + 1 << std::endl; //вывод интервала
+		fall_interval = std::prev(interval.end())->second + 1;
+		return;
 	}
 	
 	//С помощью итератора чистим наше дерево от стенок, стоящих правее той, с которой было столкновение
@@ -158,6 +173,7 @@ void Ball::KudaUpal() {
 				velocity.v_x = -velocity.v_x;
 				velocity.v_y = velocity.v_y - EarthGravity * time(it3->first, x0);
 
+				number_of_hits++;
 				break; //Нашли столкновение - выходим из цикла
 			}
 
@@ -191,14 +207,4 @@ void Ball::KudaUpal() {
 		KudaUpal();
 	}
 
-}
-
-int main(int argc, char** argv) {
-
-	if (argc < 2) return 1;
-
-	Ball ball(argv[1]);
-	ball.KudaUpal();
-
-	return 0;
 }
