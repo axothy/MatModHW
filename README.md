@@ -19,4 +19,4 @@ Variant #2
 
 `TEST(CheckVelocity, ReadingInputFile)` - тест на проверку правильности чтения текстового файла. Тест требует наличие файла `in.txt`. 
 
-`TEST(RandomWalls, FindingInvervalForBall)` - тест при вводе стенок в случайном порядке, в данном случае все они сортируются. 
+`TEST(RandomWalls, BuildWalls)` - тест при вводе стенок в случайном порядке, в данном случае все они сортируются. 
