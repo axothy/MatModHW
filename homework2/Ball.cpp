@@ -208,3 +208,12 @@ void Ball::KudaUpal() {
 	}
 
 }
+
+
+int main(int argc, char** argv) {
+
+	Ball ball(argv[1]);
+	ball.KudaUpal();
+
+	return 0;
+}
