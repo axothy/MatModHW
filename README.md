@@ -18,3 +18,5 @@ Variant #2
 `TEST(nohits_LongFlight, FindingInvervalForBall)` - тест с перелетом абсолютно всех стенок, в данном случае интервал будет самый последний. 
 
 `TEST(CheckVelocity, ReadingInputFile)` - тест на проверку правильности чтения текстового файла. Тест требует наличие файла `in.txt`. 
+
+`TEST(RandomWalls, FindingInvervalForBall)` - тест при вводе стенок в случайном порядке, в данном случае все они сортируются. 
