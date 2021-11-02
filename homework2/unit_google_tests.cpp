@@ -99,3 +99,18 @@ TEST(CheckVelocity, ReadingInputFile)
 	Ball ball("in.txt");
 	EXPECT_EQ(ball.velocity.v_x, test_vel.v_x);
 }
+
+TEST(RandomWalls, BuildWalls) {
+	Walls random_walls;
+	Walls sorted_walls;
+
+	random_walls.insert(std::make_pair(5, 4));
+	random_walls.insert(std::make_pair(2, 4));
+	random_walls.insert(std::make_pair(1, 4));
+
+	sorted_walls.insert(std::make_pair(1, 4));
+	sorted_walls.insert(std::make_pair(2, 4));
+	sorted_walls.insert(std::make_pair(5, 4));
+
+	EXPECT_EQ(random_walls, sorted_walls);
+}
