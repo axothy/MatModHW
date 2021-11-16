@@ -170,7 +170,7 @@ void Ball::KudaUpal() {
 				h0 = yMove(time(it3->first, x0));
 				x0 = it3->first;
 				velocity.v_x = -velocity.v_x;
-				velocity.v_y = velocity.v_y - EarthGravity * time(it3->first, x0);
+				velocity.v_y = velocity.v_y + EarthGravity * time(it3->first, x0);
 
 				number_of_hits++;
 				break; //Нашли столкновение - выходим из цикла
