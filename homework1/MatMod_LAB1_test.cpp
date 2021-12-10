@@ -115,39 +115,56 @@ void PointsSearching::searchLeftRight()
 	std::cout << "Rightmost: " << rightmost_point.first << ' ' << rightmost_point.second;
 	*/
 
-	double dl = 0, dr = 0;
-	double mleftx;
-	double mlefty;
-	double mrightx;
-	double mrighty;
+	double X_L = 0;
+	double Y_L = 0;
+	double X_R = 0;
+	double Y_R = 0;
+	double X_Lm = 0;
+	double Y_Lm = 0;
+	double X_Rmax = 0;
+	double Y_Lmax = 0;
+	double H_L1;
+	double H_R1;
+	double Y_Rms;
+	double X_Rms;
+	double H_Rstart = fabs((line.yn * X_R - line.xn * Y_R) / sqrt(line.xn * line.xn + line.yn * line.yn));
+	double H_Lstart = fabs((line.yn * X_L - line.xn * Y_L) / sqrt(line.xn * line.xn + line.yn * line.yn));
 
-	double sqrt_denominator = sqrt(line.A * line.A + line.B * line.B); //for algorithm efficiency
-	for (int i = 0; i < x.size(); i++)
-	{
-		distances.push_back(abs((line.xn * y.at(i) - line.yn * x.at(i))) / sqrt_denominator);
-		if (line.xn * y.at(i) - line.yn * x.at(i) > 0)
-		{
-			if (dl <= distances.at(i))
-			{
-				dl = distances.at(i);
-				mleftx = x.at(i);
-				mlefty = y.at(i);
+	for (int i = 0; i < x.size(); ++i) {
+		if (line.yn * x.at(i) - line.xn * y.at(i) < 0) {
+			X_L = x.at(i);
+			Y_L = y.at(i);
+			H_L1 = fabs((line.yn * X_L - line.xn * Y_L) / sqrt(line.xn * line.xn + line.yn * line.yn));
+			if (H_L1 >= H_Lstart) {
+				H_Lstart = H_L1;
+				X_Lm = x.at(i);
+				Y_Lm = y.at(i);
 			}
 		}
-		else
-		{
-			if (dr <= distances.at(i))
-			{
-				dr = distances.at(i);
-				mrightx = x.at(i);
-				mrighty = y.at(i);
+		else {
+			X_R = x.at(i);
+			Y_R = y.at(i);
+			H_R1 = fabs((line.yn * X_R - line.xn * Y_R) / sqrt(line.xn * line.xn + line.yn * line.yn));
+			if (H_R1 >= H_Rstart) {
+				H_Rstart = H_R1;
+				X_Rmax = x.at(i);
+				Y_Lmax = y.at(i);
+			}
+			if (H_R1 == 0) {
+				X_Rms = x.at(i);
+				Y_Rms = y.at(i);
 			}
 		}
 	}
 
-	std::cout << "Leftmost: " << mleftx << " " << mlefty << std::endl;
-	std::cout << "Rightmost: " << mrightx << " " << mrighty << std::endl;
-
+	if (H_R1 == 0) {
+		std::cout << "Leftmost: " << X_Lm << " " << Y_Lm << "\n";
+		std::cout << "Rightmost: " << X_Rms << " " << Y_Rms << "\n";
+	}
+	else {
+		std::cout << "Leftmost: " << X_Lm << " " << Y_Lm << "\n";
+		std::cout << "Rightmost: " << X_Rmax << " " << Y_Lmax << "\n";
+	}
 }
 
 int main(void)
