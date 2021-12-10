@@ -1,10 +1,11 @@
-﻿// MatMod_LAB1_test.cpp: определяет точку входа для приложения.
+// MatMod_LAB1_test.cpp: определяет точку входа для приложения.
 //
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <iterator>
 #include <cmath>
+#include <io.h>
 #include <algorithm>
 #include <vector>
 #include <string>
@@ -90,7 +91,7 @@ void PointsSearching::searchLeftRight()
 	Point rightmost_point;
 	Point leftmost_point;
 
-	distances.reserve(x.size());
+	/*distances.reserve(x.size());
 	double max_distance = 0, min_distance = 0;
 
 	double sqrt_denominator = sqrt(line.A * line.A + line.B * line.B); //for algorithm efficiency
@@ -113,6 +114,40 @@ void PointsSearching::searchLeftRight()
 
 	std::cout << "Leftmost: " << leftmost_point.first << ' ' << leftmost_point.second << "\n";
 	std::cout << "Rightmost: " << rightmost_point.first << ' ' << rightmost_point.second;
+	*/
+
+	double dl = 0, dr = 0;
+	double mleftx;
+	double mlefty;
+	double mrightx;
+	double mrighty;
+
+	double sqrt_denominator = sqrt(line.A * line.A + line.B * line.B); //for algorithm efficiency
+	for (int i = 1; i < x.size(); i++)
+	{
+		distances.push_back(abs((line.xn * y.at(i) - line.yn * x.at(i))) / sqrt_denominator);
+		if (line.xn * y.at(i) - line.yn * x.at(i) > 0)
+		{
+			if (dl <= distances.at(i))
+			{
+				dl = distances.at(i);
+				mleftx = x.at(i);
+				mlefty = y.at(i);
+			}
+		}
+		else
+		{
+			if (dr <= distances.at(i))
+			{
+				dr = distances.at(i);
+				mrightx = x.at(i);
+				mrighty = y.at(i);
+			}
+		}
+	}
+
+	std::cout << "Leftmost: " << mleftx << " " << mlefty << std::endl;
+	std::cout << "Rightmost: " << mrightx << " " << mrighty << std::endl;
 
 }
 
