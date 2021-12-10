@@ -122,7 +122,7 @@ void PointsSearching::searchLeftRight()
 	double mrighty;
 
 	double sqrt_denominator = sqrt(line.A * line.A + line.B * line.B); //for algorithm efficiency
-	for (int i = 1; i < x.size(); i++)
+	for (int i = 0; i < x.size(); i++)
 	{
 		distances.push_back(abs((line.xn * y.at(i) - line.yn * x.at(i))) / sqrt_denominator);
 		if (line.xn * y.at(i) - line.yn * x.at(i) > 0)
