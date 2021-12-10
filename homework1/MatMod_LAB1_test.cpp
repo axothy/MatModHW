@@ -87,8 +87,9 @@ inline void PointsSearching::getVectors()
 
 void PointsSearching::searchLeftRight()
 {
-	Point rightmost_point;
-	Point leftmost_point;
+	Point L{ 0,0 }, R{ 0,0 };
+	Point Lm{ 0,0 }, Rmax{ 0,0 }, Lmax{ 0,0 };
+	Point Rms;
 
 	/*distances.reserve(x.size());
 	double max_distance = 0, min_distance = 0;
@@ -115,55 +116,47 @@ void PointsSearching::searchLeftRight()
 	std::cout << "Rightmost: " << rightmost_point.first << ' ' << rightmost_point.second;
 	*/
 
-	double X_L = 0;
-	double Y_L = 0;
-	double X_R = 0;
-	double Y_R = 0;
-	double X_Lm = 0;
-	double Y_Lm = 0;
-	double X_Rmax = 0;
-	double Y_Lmax = 0;
-	double H_L1;
-	double H_R1;
-	double Y_Rms;
-	double X_Rms;
-	double H_Rstart = fabs((line.yn * X_R - line.xn * Y_R) / sqrt(line.xn * line.xn + line.yn * line.yn));
-	double H_Lstart = fabs((line.yn * X_L - line.xn * Y_L) / sqrt(line.xn * line.xn + line.yn * line.yn));
+	double d_L1;
+	double d_R1;
+
+	double d_Rstart = fabs((line.yn * R.first - line.xn * R.second) / sqrt(line.xn * line.xn + line.yn * line.yn));
+	double d_Lstart = fabs((line.yn * L.first - line.xn * L.second) / sqrt(line.xn * line.xn + line.yn * line.yn));
 
 	for (int i = 0; i < x.size(); ++i) {
 		if (line.yn * x.at(i) - line.xn * y.at(i) < 0) {
-			X_L = x.at(i);
-			Y_L = y.at(i);
-			H_L1 = fabs((line.yn * X_L - line.xn * Y_L) / sqrt(line.xn * line.xn + line.yn * line.yn));
-			if (H_L1 >= H_Lstart) {
-				H_Lstart = H_L1;
-				X_Lm = x.at(i);
-				Y_Lm = y.at(i);
+			L.first = x.at(i);
+			L.second = y.at(i);
+			d_L1 = fabs((line.yn * L.first - line.xn * L.second) / sqrt(line.xn * line.xn + line.yn * line.yn));
+			if (d_L1 >= d_Lstart) {
+				d_Lstart = d_L1;
+				Lm.first = x.at(i);
+				Lm.second = y.at(i);
 			}
 		}
 		else {
-			X_R = x.at(i);
-			Y_R = y.at(i);
-			H_R1 = fabs((line.yn * X_R - line.xn * Y_R) / sqrt(line.xn * line.xn + line.yn * line.yn));
-			if (H_R1 >= H_Rstart) {
-				H_Rstart = H_R1;
-				X_Rmax = x.at(i);
-				Y_Lmax = y.at(i);
+			R.first = x.at(i);
+			R.second = y.at(i);
+			d_R1 = fabs((line.yn * R.first - line.xn * R.second) / sqrt(line.xn * line.xn + line.yn * line.yn));
+			if (d_R1 >= d_Rstart) {
+				d_Rstart = d_R1;
+				Rmax.first = x.at(i);
+				Lmax.second = y.at(i);
 			}
-			if (H_R1 == 0) {
-				X_Rms = x.at(i);
-				Y_Rms = y.at(i);
+			if (d_R1 == 0) {
+				Rms.first = x.at(i);
+				Rms.second = y.at(i);
 			}
 		}
 	}
 
-	if (H_R1 == 0) {
-		std::cout << "Leftmost: " << X_Lm << " " << Y_Lm << "\n";
-		std::cout << "Rightmost: " << X_Rms << " " << Y_Rms << "\n";
+	if (d_R1 == 0) {
+		std::cout << "Leftmost: " << Lm.first << " " << Lm.second << "\n";
+		std::cout << "Rightmost: " << Rms.first << " " << Rms.second << "\n";
 	}
+
 	else {
-		std::cout << "Leftmost: " << X_Lm << " " << Y_Lm << "\n";
-		std::cout << "Rightmost: " << X_Rmax << " " << Y_Lmax << "\n";
+		std::cout << "Leftmost: " << Lm.first << " " << Lm.second << "\n";
+		std::cout << "Rightmost: " << Rmax.first << " " << Lmax.second << "\n";
 	}
 }
 
