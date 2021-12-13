@@ -130,8 +130,8 @@ int Ball::KudaUpal() {
 			std::cout << 0;
 			return 0;
 		}
-		if (m > size(walls) - 1) {
-			std::cout << size(walls);
+		if (m > walls.size() - 1) {
+			std::cout << walls.size();
 			return 0;
 		}
 
@@ -165,7 +165,7 @@ int Ball::KudaUpal() {
 int main(int argc, char** argv) {
 
 	Ball ball("in.txt");
-	ball.KudaUpal();
+    ball.KudaUpal();
 
 	return 0;
 }
