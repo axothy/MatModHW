@@ -3,7 +3,6 @@
 #include <sstream>
 #include <iterator>
 #include <cmath>
-#include <io.h>
 #include <algorithm>
 #include <vector>
 #include <string>
