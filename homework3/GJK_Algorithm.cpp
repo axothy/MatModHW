@@ -2,20 +2,30 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include <iterator>
+#include <sstream>
 
 class Figure {
-
+public:
+	virtual void getData() = 0;
+	virtual bool isDotInFigure(int x, int y) = 0;
 };
 
 class Circle : public Figure {
-	double _radius, _x, _y;
+	double radius_, x_, y_;
 public:
 	Circle(double r, double x, double y) {
-		_radius = r;
-		_x = x;
-		_y = y;
+		radius_ = r;
+		x_ = x;
+		y_ = y;
 	}
+	bool isDotInFigure(int x, int y) {
+		if ((x_ - x) * (x_ - x) + (y_ - y) * (y_ - y) < radius_ * radius_) {
+			return true;
+		}
+		return false;
+	}
+	void getData() { std::cout << "CIRCLE" << std::endl; }
+
 };
 
 class Rectangle : public Figure {
@@ -31,14 +41,78 @@ public:
 		x4_ = x1;
 		y4_ = y3;
 	}
+	bool isDotInFigure(int x, int y) {
+		if (x > x1_ && y > y1_ && x < x3_ && y < y3_) {
+			return true;
+		}
+		return false;
+	}
+	void getData() { std::cout << "RECT" << std::endl; }
 };
 
 class Polygon : public Figure {
+	std::vector<std::pair<double, double>> points;
+public:
+	Polygon(std::vector<std::pair<double, double>>& pts) {
+		points = pts;
+	}
+	void getData() { std::cout << "POLY" << std::endl; }
+
+	bool isDotInFigure(int x, int y) { return 0; }
 
 };
 
 class Reader {
 public:
+	Reader(std::vector<Figure*>& figures) {
+		std::ifstream input("input.txt");
+
+		if (input.is_open() == false || input.eof()) {
+			exit(0);
+		}
+
+		std::string inputstr;
+
+		input >> inputstr;
+
+		while (!input.eof()) {
+			if (inputstr == "RECTANGLE") {
+				double x1, y1, x3, y3;
+				input >> x1 >> y1 >> x3 >> y3;
+				figures.push_back(new Rectangle(x1, y1, x3, y3));
+				input >> inputstr;
+			}
+			else if (inputstr == "CIRCLE") {
+				double r, x, y;
+				input >> r >> x >> y;
+				figures.push_back(new Circle(r, x, y));
+				input >> inputstr;
+			}
+			else if (inputstr == "POLYGON") {
+				std::vector<std::pair<double, double>> points;
+				std::pair<double, double> point;
+				std::string checkStr;
+
+				while (!input.eof()) {
+					input >> checkStr;
+					if (checkStr == "CIRCLE" || checkStr == "RECTANGLE") {
+						break;
+					}
+
+					std::stringstream ss(checkStr);
+					ss >> point.first;
+					input >> point.second;
+					points.push_back(point);
+				}
+				figures.push_back(new Polygon(points));
+				inputstr = checkStr;
+
+			}
+
+
+		}
+	}
+
 	Reader(std::string& initstr) {
 		std::ifstream input("input.txt");
 
@@ -47,7 +121,6 @@ public:
 		}
 
 		std::string inputstr;
-		std::string initstr;
 
 		while (!input.eof()) {
 			input >> inputstr;
@@ -97,26 +170,12 @@ public:
 
 int main()
 {
-	std::string initstring;
 	std::vector<Figure*> figures;
 
-	auto reading = [&initstring]() {
-		Reader readfile(initstring);
-	};
 
-	std::thread read(reading);
-
-	Initializer initializer;
-
-	auto initialization = [&initstring, &figures](Initializer initializer)->Initializer {
-		initializer.InitFigures(initstring, figures);
-	};
-
-	std::thread init(initialization(initializer));
-
-
-	read.join();
-	init.join();
-
+	Reader readfile(figures);
+	for (int i = 0; i < figures.size(); i++) {
+		figures[i]->getData();
+	}
 	return 0;
 }
