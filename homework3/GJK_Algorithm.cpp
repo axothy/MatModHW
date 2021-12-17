@@ -45,7 +45,7 @@ using Point = Point2D;
 class Figure {
 public:
 	FigureType type_ = EXCEPTION_TYPE;
-	int figureID;
+	int figureID_;
 
 	virtual void getData() = 0;
 
@@ -54,8 +54,7 @@ public:
 
 	virtual std::vector<Point> getPoints() = 0;
 	virtual double getRadius() = 0;
-	virtual double getXCenter() = 0;
-	virtual double getYCenter() = 0;
+	virtual Point getCenter() = 0;
 	virtual int getFigureID() = 0;
 };
 
@@ -81,8 +80,7 @@ public:
 
 	std::vector<Point> getPoints() { return {}; }
 	double getRadius() override { return radius_; }
-	double getXCenter() override { return x_; }
-	double getYCenter() override { return y_; }
+	Point getCenter() override { return { x_, y_ }; }
 
 };
 
@@ -105,8 +103,7 @@ public:
 
 	inline std::vector<Point> getPoints() override { return points; }
 	double getRadius() override { return -1; }
-	double getXCenter() override { return -1; }
-	double getYCenter() override { return -1; }
+	Point getCenter() { return {}; }
 
 	inline void setType(FigureType type) override { type_ = type; }
 	inline FigureType getType() override { return type_; }
@@ -129,8 +126,7 @@ public:
 	inline std::vector<Point> getPoints() override { return points; }
 
 	double getRadius() override { return -1; }
-	double getXCenter() override { return -1; }
-	double getYCenter() override { return -1; }
+	Point getCenter() { return {}; }
 
 	inline void setType(FigureType type) override { type_ = type; }
 	inline FigureType getType() override { return type_; }
@@ -262,17 +258,16 @@ public:
 
 	std::vector<Point> Jostle(std::vector<Point> figure_points);
 	int GilbertJohnsonKeerthi(const std::vector<Point> figure1, const std::vector<Point> figure2);
+	int CirclesCollisions(double r1, double r2, Point center1, Point center2);
 
 private:
 	Point tripleProduct(Point a, Point b, Point c);
 	Point averagePoint(const std::vector<Point> figure_points);
 	size_t indexOfFurthestPoint(const std::vector<Point> figure_points, Point d);
-	Point support(const std::vector<Point> figure_points1,
-		const std::vector<Point> figure_points2, Point d);
+	Point support(const std::vector<Point> figure_points1, const std::vector<Point> figure_points2, Point d);
 	double Perturbation();
 
 };
-
 
 Point CollisionDetector::tripleProduct(Point a, Point b, Point c) {
 
@@ -409,6 +404,15 @@ int CollisionDetector::GilbertJohnsonKeerthi(const std::vector<Point> figure1, c
 	return 0;
 }
 
+int CollisionDetector::CirclesCollisions(double r1, double r2, Point center1, Point center2) {
+
+	double distance = sqrt((center2.x - center1.x) * (center2.x - center1.x) +
+		(center2.y - center1.y) * (center2.y - center1.y));
+
+	if (distance <= (r1 + r2)) return 1;
+	else return 0;
+}
+
 CollisionDetector::CollisionDetector(std::vector<Figure*>& figures) {
 
 	int collisionDetected;
@@ -428,6 +432,8 @@ CollisionDetector::CollisionDetector(std::vector<Figure*>& figures) {
 				}
 
 				if ((figures[k]->getType() == CIRCLE) && (figures[i]->getType() == CIRCLE)) {
+					collisionDetected = CirclesCollisions(figures[k]->getRadius(), figures[i]->getRadius(),
+						figures[k]->getCenter(), figures[i]->getCenter());
 				}
 				
 				if (collisionDetected)
