@@ -104,7 +104,7 @@ public:
 
 	bool isDotInFigure(int x, int y) { return 0; }
 
-	std::vector<std::pair<double, double>> getPoints() { return points; }
+	std::vector<std::pair<double, double>> getPoints() override { return points; }
 
 	double getX1() { return -1; }
 	double getX2() { return -1; }
