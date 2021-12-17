@@ -4,6 +4,7 @@
 #include <vector>
 #include <sstream>
 
+
 class Figure {
 public:
 	virtual void getData() = 0;
@@ -40,7 +41,19 @@ public:
 	}
 	void getData() { std::cout << "CIRCLE" << std::endl; }
 
+	std::vector<std::pair<double, double>> getPoints() { return {}; }
 	double getRadius() override { return radius_; }
+	double getXCenter() override { return x_; }
+	double getYCenter() override { return y_; }
+
+	double getX1() { return -1; }
+	double getX2() { return -1; }
+	double getX3() { return -1; }
+	double getX4() { return -1; }
+	double getY1() { return -1; }
+	double getY2() { return -1; }
+	double getY3() { return -1; }
+	double getY4() { return -1; }
 };
 
 class Rectangle : public Figure {
@@ -65,6 +78,20 @@ public:
 
 	void getData() { std::cout << "RECT" << std::endl; }
 
+	std::vector<std::pair<double, double>> getPoints() { return {}; }
+	double getRadius() override { return -1; }
+	double getXCenter() override { return -1; }
+	double getYCenter() override { return -1; }
+
+
+	double getX1() override { return x1_; }
+	double getX2() override { return x2_; }
+	double getX3() override { return x3_; }
+	double getX4() override { return x4_; }
+	double getY1() override { return y1_; }
+	double getY2() override { return y2_; }
+	double getY3() override { return y3_; }
+	double getY4() override { return y4_; }
 };
 
 class Polygon : public Figure {
@@ -77,6 +104,20 @@ public:
 
 	bool isDotInFigure(int x, int y) { return 0; }
 
+	std::vector<std::pair<double, double>> getPoints() { return points; }
+
+	double getX1() { return -1; }
+	double getX2() { return -1; }
+	double getX3() { return -1; }
+	double getX4() { return -1; }
+	double getY1() { return -1; }
+	double getY2() { return -1; }
+	double getY3() { return -1; }
+	double getY4() { return -1; }
+
+	double getRadius() override { return -1; }
+	double getXCenter() override { return -1; }
+	double getYCenter() override { return -1; }
 };
 
 class Reader {
@@ -194,7 +235,6 @@ int main()
 	for (int i = 0; i < figures.size(); i++) {
 		figures[i]->getData();
 	}
-
 
 	return 0;
 }
