@@ -8,6 +8,20 @@ class Figure {
 public:
 	virtual void getData() = 0;
 	virtual bool isDotInFigure(int x, int y) = 0;
+
+	virtual std::vector<std::pair<double, double>> getPoints() = 0;
+
+	virtual double getRadius() = 0;
+	virtual double getXCenter() = 0;
+	virtual double getYCenter() = 0;
+	virtual double getX1() = 0;
+	virtual double getX2() = 0;
+	virtual double getX3() = 0;
+	virtual double getX4() = 0;
+	virtual double getY1() = 0;
+	virtual double getY2() = 0;
+	virtual double getY3() = 0;
+	virtual double getY4() = 0;
 };
 
 class Circle : public Figure {
@@ -26,6 +40,7 @@ public:
 	}
 	void getData() { std::cout << "CIRCLE" << std::endl; }
 
+	double getRadius() override { return radius_; }
 };
 
 class Rectangle : public Figure {
@@ -47,7 +62,9 @@ public:
 		}
 		return false;
 	}
+
 	void getData() { std::cout << "RECT" << std::endl; }
+
 };
 
 class Polygon : public Figure {
@@ -177,5 +194,7 @@ int main()
 	for (int i = 0; i < figures.size(); i++) {
 		figures[i]->getData();
 	}
+
+
 	return 0;
 }
