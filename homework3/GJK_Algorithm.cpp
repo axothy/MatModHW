@@ -4,8 +4,32 @@
 #include <vector>
 #include <sstream>
 
-struct _vec2 { double x; double y; };
-using vec2 = _vec2;
+struct vector2D
+{
+	double x;
+	double y;
+
+	double getX() { return x; }
+	double getY() { return y; }
+
+	void setX(double x0) { x = x0; }
+	void setY(double y0) { y = y0; }
+
+	bool operator==(const vector2D xy0) {
+		if ((*this).x == xy0.x && (*this).y == xy0.y) {
+			return true;
+		}
+		else
+			return false;
+	}
+
+	//оператор неравно , тоже что и сверху только отрицание
+	bool operator!=(const vector2D xy0) {
+		return !((*this) == xy0);
+	}
+};
+
+using vec2 = vector2D;
 
 class Figure {
 public:
