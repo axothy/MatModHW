@@ -3,6 +3,7 @@
 #include <fstream>
 #include <vector>
 #include <sstream>
+#include <map>
 
 enum FigureType {
 	RECTANGLE, POLYGON, CIRCLE, EXCEPTION_TYPE
@@ -255,7 +256,7 @@ public:
 	CollisionDetector();
 	CollisionDetector(std::vector<Figure*>& figures);
 
-	std::vector<std::pair<int, int>> collided_figures;
+	std::map<int, int> collided_figures;
 
 	void showCollisions();
 
@@ -431,7 +432,14 @@ CollisionDetector::CollisionDetector(std::vector<Figure*>& figures) {
 				
 				if (collisionDetected)
 				{
-					collided_figures.push_back({ figures[k]->getFigureID(), figures[i]->getFigureID() });
+
+					if (figures[i]->getFigureID() > figures[k]->getFigureID()) {
+						collided_figures.insert({ figures[k]->getFigureID(), figures[i]->getFigureID() });
+					}
+
+					if (figures[i]->getFigureID() < figures[k]->getFigureID()) {
+						collided_figures.insert({ figures[i]->getFigureID(), figures[k]->getFigureID() });
+					}
 				}
 			}
 		}
