@@ -19,7 +19,7 @@ typedef struct Velocity {
 class Ball {
 public:
 	//Конструкторы мячика
-	Ball() {} 
+	Ball() {}
 	Ball(double h0, double vx, double vy, const Walls input_walls) : h0(h0),
 		velocity({ vx, vy }), walls(std::move(input_walls)), x0(0), number_of_hits(0) {
 		this->walls.insert(std::make_pair(-1, -1)); checkWalls();
@@ -64,7 +64,7 @@ void Ball::BuildWalls() {
 		walls.insert(std::make_pair(tmpx, tmpy));
 	} while (!file.eof());
 	checkWalls();
-} 
+}
 void Ball::checkWalls() {
 	std::map<double, double>::iterator it0 = walls.begin();
 	while (it0 != walls.end()) {
@@ -115,7 +115,7 @@ void Ball::KudaUpal() {
 		fall_interval = std::prev(interval.end())->second + 1;
 		return;
 	}
-	
+
 	//С помощью итератора чистим наше дерево от стенок, стоящих правее той, с которой было столкновение
 	//erase делаем так, чтобы итератор не терялся и не указывал на пустой блок памяти
 	//После чистки лишние стенки удалились справа и мы можем идти с конца дерева
@@ -166,14 +166,17 @@ void Ball::KudaUpal() {
 			}
 			else
 				it4++;
-		} 
-	} 
+		}
+	}
 	if (ymove < wall_y && ymove > 0) {
 		KudaUpal();
 	}
 }
+
 int main(int argc, char** argv) {
-	Ball ball(argv[1]);
-	ball.KudaUpal();
-	return 0;
+	
+	if (argc == 2) {
+		Ball ball(argv[1]);
+		ball.KudaUpal();
+	}
 }
