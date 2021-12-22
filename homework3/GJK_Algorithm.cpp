@@ -119,7 +119,13 @@ public:
 	inline FigureType getType() override { return type_; }
 	inline int getFigureID() override { return figureID_; }
 
-	const bool isDotInFigure(Point point) override { return -1; }
+	const bool Rectangle::isDotInFigure(Point point) override {
+	if (point.x >= points.at(0).x && point.y <= points.at(0).y && point.x <= points.at(2).x && point.y >= points.at(2).x) {
+		return true;
+	}
+
+	return false;
+}
 };
 
 class Polygon : public Figure {
